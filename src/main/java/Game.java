@@ -1,35 +1,21 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public class Game {
-    private final List<Player> players = new ArrayList<>();
+    // Константы для ходов
+    public static final int ROCK = 0;
+    public static final int PAPER = 1;
+    public static final int SCISSORS = 2;
 
-    public void register(Player player) {
-        if (findByName(player.getName()).isPresent()) {
-            throw new IllegalArgumentException("Player " + player.getName() + " already registered");
+    public int determineWinner(int player1Move, int player2Move) {
+        if (player1Move == player2Move) {
+            return 0; // Ничья
         }
-        players.add(player);
-    }
 
-    public int round(String playerName1, String playerName2) {
-        Player player1 = findByName(playerName1)
-                .orElseThrow(() -> new NotRegisteredException("Player " + playerName1 + " not registered"));
-
-        Player player2 = findByName(playerName2)
-                .orElseThrow(() -> new NotRegisteredException("Player " + playerName2 + " not registered"));
-
-        if (player1.getStrength() > player2.getStrength()) {
-            return 1;
-        } else if (player1.getStrength() < player2.getStrength()) {
-            return 2;
+        // Проверка победы игрока 1
+        if ((player1Move == ROCK && player2Move == SCISSORS) ||
+                (player1Move == PAPER && player2Move == ROCK) ||
+                (player1Move == SCISSORS && player2Move == PAPER)) {
+            return 1; // Исправлено с -1 на 1
+        } else {
+            return 2; // Исправлено с 1 на 2
         }
-        return 0;
-    }
-
-    private Optional<Player> findByName(String name) {
-        return players.stream()
-                .filter(p -> p.getName().equals(name))
-                .findFirst();
     }
 }
